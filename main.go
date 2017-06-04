@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	c := config.NewDefaultConfig()
+	c := config.GetConfig("config/config.json")
 	w := proxyServer.NewWorkProcess(c)
 	w.Run()
 }

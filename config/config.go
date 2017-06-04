@@ -1,5 +1,11 @@
 package config
 
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+)
+
 type Upstream struct {
 	Timeout   int
 	Endporint []string
@@ -19,6 +25,41 @@ type Server struct {
 type Config struct {
 	MaxProcess int
 	Servers    []Server
+}
+
+func GetConfig(configPath string) Config {
+
+	var fileBuff []byte
+	var config Config
+
+	f, err := os.Open(configPath)
+	if err != nil {
+		fmt.Printf("Open file %s error: %v\n", configPath, err)
+	}
+	defer f.Close()
+	count, err := f.Read(fileBuff)
+	//_, _ = f.Write([]byte("hello world"))
+
+	fmt.Println(f.Name())
+	if err != nil {
+		fmt.Printf("read file err %v\n", err)
+	}
+
+	fmt.Printf("read %d bytes: %q\n", count, fileBuff[:count])
+	err = json.Unmarshal(fileBuff[:count], config)
+	if err != nil {
+		fmt.Printf("Parse config file err:%v\n", err)
+	}
+	return config
+}
+
+func EncodeDefaultConfig() {
+	buff, err := json.Marshal(NewDefaultConfig())
+	if err != nil {
+		fmt.Printf("Decode json error :%v\n", err)
+	}
+	fmt.Printf(string(buff))
+
 }
 
 func NewDefaultConfig() Config {

@@ -1,0 +1,24 @@
+{
+    "MaxProcess": 2,
+    "Servers": [
+        {
+            "Locations": [
+                {
+                    "Path": "/",
+                    "ProxyPass": {
+                        "Endporint": [
+                            "14.215.177.37:80"
+                        ],
+                        "Timeout": 30
+                    }
+                }
+            ],
+            "Port": [
+                80
+            ],
+            "ServerName": [
+                "www.baidu.com"
+            ]
+        }
+    ]
+}
