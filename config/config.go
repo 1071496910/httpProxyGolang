@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 )
 
 type Upstream struct {
@@ -29,7 +30,8 @@ type Config struct {
 
 func GetConfig(configPath string) Config {
 
-	var fileBuff []byte
+	fileBuff := make([]byte, 1024)
+	//config := NewDefaultConfig()
 	var config Config
 
 	f, err := os.Open(configPath)
@@ -38,7 +40,6 @@ func GetConfig(configPath string) Config {
 	}
 	defer f.Close()
 	count, err := f.Read(fileBuff)
-	//_, _ = f.Write([]byte("hello world"))
 
 	fmt.Println(f.Name())
 	if err != nil {
@@ -46,7 +47,9 @@ func GetConfig(configPath string) Config {
 	}
 
 	fmt.Printf("read %d bytes: %q\n", count, fileBuff[:count])
-	err = json.Unmarshal(fileBuff[:count], config)
+	dec := json.NewDecoder(strings.NewReader(string(fileBuff)))
+	err = dec.Decode(&config)
+	//err = json.Unmarshal(fileBuff[:count], config)
 	if err != nil {
 		fmt.Printf("Parse config file err:%v\n", err)
 	}
